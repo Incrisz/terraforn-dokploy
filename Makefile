@@ -1,13 +1,15 @@
-# Makefile for Terraform with .env support
+# Makefile for Terraform with .env support and module targeting
 
-# Load .env into shell
-include .env
-export
+SHELL := /bin/bash
+ENV_FILE := .env
 
-# Default Terraform vars
-TF_VAR_aws_region=$(AWS_DEFAULT_REGION)
+# Load .env variables
+ifneq ("$(wildcard $(ENV_FILE))","")
+  include $(ENV_FILE)
+  export $(shell sed 's/=.*//' $(ENV_FILE))
+endif
 
-.PHONY: init plan apply destroy format
+.PHONY: init plan apply destroy format apply-ec2 apply-dns destroy-ec2 destroy-dns debug
 
 init:
 	terraform init
@@ -26,3 +28,16 @@ format:
 
 debug:
 	terraform console
+
+# Module-specific targets
+apply-ec2:
+	terraform apply -auto-approve -target=module.ec2
+
+apply-dns:
+	terraform apply -auto-approve -target=module.dns
+
+destroy-ec2:
+	terraform destroy -auto-approve -target=module.ec2
+
+destroy-dns:
+	terraform destroy -auto-approve -target=module.dns
