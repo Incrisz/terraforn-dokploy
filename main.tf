@@ -13,9 +13,9 @@ output "ec2_public_ip" {
 
 
 module "dns" {
-  source = "./modules/dns"
-
+  source                = "./modules/dns"
   cloudflare_api_token = var.cloudflare_api_token
   domain_name          = var.domain_name
+  subdomain            = "www"
   record_value         = module.ec2.public_ip
 }

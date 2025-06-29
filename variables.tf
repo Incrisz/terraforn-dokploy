@@ -21,5 +21,25 @@ variable "key_pair_name" {
 
 
 # Cloudflare vars
-variable "cloudflare_api_token" {}
-variable "domain_name" {}
+variable "cloudflare_api_token" {
+  description = "API token for Cloudflare"
+  type        = string
+  # sensitive   = true
+}
+
+variable "domain_name" {
+  description = "Root domain name"
+  type        = string
+}
+
+# Optional override
+variable "subdomain" {
+  type    = string
+  default = "www"
+}
+
+variable "record_value" {
+  type        = string
+  description = "The IP address the DNS record should point to"
+}
+
